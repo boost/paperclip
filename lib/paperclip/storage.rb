@@ -137,7 +137,6 @@ module Paperclip
         base.instance_eval do
           @s3_credentials = parse_credentials(@options[:s3_credentials])
           @bucket         = @options[:bucket]         || @s3_credentials[:bucket]
-          @bucket         = @bucket.call(self) if @bucket.is_a?(Proc)
           @s3_options     = @options[:s3_options]     || {}
           @s3_permissions = @options[:s3_permissions] || :public_read
           @s3_protocol    = @options[:s3_protocol]    || (@s3_permissions == :public_read ? 'http' : 'https')
@@ -165,7 +164,7 @@ module Paperclip
       end
 
       def bucket_name
-        @bucket
+        @bucket.is_a?(Proc) ? @bucket.call(self) : @bucket
       end
 
       def s3_host_alias

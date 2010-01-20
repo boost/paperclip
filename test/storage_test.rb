@@ -220,6 +220,15 @@ class StorageTest < Test::Unit::TestCase
       assert "bucket_a", Dummy.new(:other => 'a').avatar.bucket_name
       assert "bucket_b", Dummy.new(:other => 'b').avatar.bucket_name
     end
+    
+    should "get the right bucket name if the data returned by the Proc changes" do
+      object = Dummy.new(:other => 'a')
+      instance = object.avatar
+      
+      assert_equal "bucket_a", instance.bucket_name
+      object.other = 'b'
+      assert_equal "bucket_b", instance.bucket_name
+    end
   end
 
   context "An attachment with S3 storage and specific s3 headers set" do
